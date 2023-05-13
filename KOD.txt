@@ -21,7 +21,7 @@ from skimage import io
 # Load the input image and resize it by 0.5
 im = cv2.imread("test.jpg")
 im1 = im.copy()
-cv2.resize(im, None, fx=0.5, fy=0.5)
+#cv2.resize(im, None, fx=0.5, fy=0.5)
 
 # Convert the resized image to grayscale
 gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
@@ -29,9 +29,9 @@ cv2.imshow('gray', gray)
 #show_image(gray)
 
 # Apply a Gaussian filter to the grayscale image
-gSize = 15
-gray = cv2.GaussianBlur(gray, (gSize, gSize), gSize / 2)
-cv2.imshow('after gauss', gray)
+#gSize = 15
+#gray = cv2.GaussianBlur(gray, (gSize, gSize), gSize / 2)
+#cv2.imshow('after gauss', gray)
 #show_image(gray)
 
 # Compute the image gradients using Sobel operators
@@ -49,11 +49,11 @@ mgBw = cv2.morphologyEx(mgBw.astype(np.uint8), cv2.MORPH_CLOSE,
                         cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
 cv2.imshow('remove1', mgBw * 255)
 #show_image(mgBw * 255)
-mgBw = cv2.morphologyEx(mgBw, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7)))
-cv2.imshow('remove2', mgBw * 255)
+#mgBw = cv2.morphologyEx(mgBw, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7)))
+#cv2.imshow('remove2', mgBw * 255)
 #show_image(mgBw * 255)
-mgBw = cv2.morphologyEx(mgBw, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)))
-cv2.imshow('remove3', mgBw * 255)
+#mgBw = cv2.morphologyEx(mgBw, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)))
+#cv2.imshow('remove3', mgBw * 255)
 #show_image(mgBw * 255)
 
 # draw outlines of the mask on image
