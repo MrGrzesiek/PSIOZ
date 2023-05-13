@@ -1,0 +1,71 @@
+# Matlab code:
+# im1 = imresize(imread('scratch.jpg'),0.5);
+# gray = rgb2gray(im);
+# gSize = 15; gray = imfilter(gray,fspecial('gaussian',[gSize,gSize],gSize/2),'replicate');
+# [~,~,mg,~] = ImageFeatures.Gradients(gray);
+# mgBw = mg > 0.3*max(mg(:));
+# mgBw = imclose(mgBw,strel('disk',1));
+# mgBw = bwareaopen(mgBw,500);
+# mgBw = imclose(mgBw,strel('disk',2));
+# mgBw = imfill(mgBw,'holes');
+def show_image(image):
+    cv2.imshow('image', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+#Python code:
+import cv2
+import numpy as np
+from skimage import io
+
+# Load the input image and resize it by 0.5
+im = cv2.imread("test.jpg")
+im1 = im.copy()
+cv2.resize(im, None, fx=0.5, fy=0.5)
+
+# Convert the resized image to grayscale
+gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+cv2.imshow('gray', gray)
+#show_image(gray)
+
+# Apply a Gaussian filter to the grayscale image
+gSize = 15
+gray = cv2.GaussianBlur(gray, (gSize, gSize), gSize / 2)
+cv2.imshow('after gauss', gray)
+#show_image(gray)
+
+# Compute the image gradients using Sobel operators
+gx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=1)
+gy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=1)
+mg = np.sqrt(gx ** 2 + gy ** 2)
+#cv2.imshow('SOBEL', mg)
+#show_image(mg)
+
+# Threshold the gradient magnitude image
+mgBw = mg > 0.3 * np.max(mg)
+
+# Perform morphological operations to remove small objects and fill holes
+mgBw = cv2.morphologyEx(mgBw.astype(np.uint8), cv2.MORPH_CLOSE,
+                        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+cv2.imshow('remove1', mgBw * 255)
+#show_image(mgBw * 255)
+mgBw = cv2.morphologyEx(mgBw, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7)))
+cv2.imshow('remove2', mgBw * 255)
+#show_image(mgBw * 255)
+mgBw = cv2.morphologyEx(mgBw, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)))
+cv2.imshow('remove3', mgBw * 255)
+#show_image(mgBw * 255)
+
+# draw outlines of the mask on image
+#
+contours, hierarchy = cv2.findContours(mgBw, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+cv2.drawContours(im1, contours, -1, (0, 255, 0), 3)
+cv2.imshow('maska', im1)
+#show_image(im1)
+
+mgBw = cv2.fillPoly(mgBw, [np.array([(0, 0), (0, im1.shape[0]), (im1.shape[1], im1.shape[0]), (im1.shape[1], 0)])], 1)
+
+# Display the output image
+cv2.imshow('output', mgBw * 255)
+#show_image(mgBw * 255)
+cv2.waitKey(0)
