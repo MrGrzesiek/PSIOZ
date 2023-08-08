@@ -1,3 +1,8 @@
+#FOLDER
+wyniki/
+v1.0/
+v0.5/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
